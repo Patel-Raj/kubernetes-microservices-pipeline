@@ -1,0 +1,19 @@
+steps:
+
+  # Build docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/cloud-repository/calculator-img:$SHORT_SHA', '.']
+
+  # Push docker image to artifact registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/cloud-repository/calculator-img:$SHORT_SHA']
+
+- name: "gcr.io/cloud-builders/gke-deploy"
+  args:
+    - run
+    - --filename=deployment/
+    - --image=us-central1-docker.pkg.dev/$PROJECT_ID/cloud-repository/calculator-img:$SHORT_SHA
+    - --location=us-central1-c
+    - --cluster=gke-cluster-1
+
+images: ['us-central1-docker.pkg.dev/$PROJECT_ID/cloud-repository/calculator-img:$SHORT_SHA']

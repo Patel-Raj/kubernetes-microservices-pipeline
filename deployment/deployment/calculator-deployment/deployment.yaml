@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator-deployment
+  template:
+    metadata:
+      labels:
+        app: calculator-deployment
+    spec:
+      containers:
+        - name: calculator-container
+          image: us-central1-docker.pkg.dev/k8s-project-id-1/cloud-repository/calculator-img
+          ports:
+            - containerPort: 8081
+          volumeMounts:
+            - name: data
+              mountPath: /Raj_PV_dir/
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: storage-claim

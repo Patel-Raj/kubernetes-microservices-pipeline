@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: validator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: validator-deployment
+  template:
+    metadata:
+      labels:
+        app: validator-deployment
+    spec:
+      containers:
+        - name: validator-container
+          image: us-central1-docker.pkg.dev/k8s-project-id-1/cloud-repository/validator-img
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /Raj_PV_dir/
+          imagePullPolicy: Always
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: storage-claim
